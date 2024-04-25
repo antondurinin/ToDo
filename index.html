@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <!-- make a simple TODO app -->
+  <h1>TODO App</h1>
+  <input type="text" name="todo" placeholder="Enter your todo">
+  <button onclick="addTodo()">Add</button>
+
+  <!-- TODO item -->
+  <div class="todo-item">TODO ITEM 1</div>
+
+  <script>
+    function addTodo() {
+      // Get the value of the input field
+      const todoText = document.querySelector('input[name="todo"]').value;
+
+      // Create a new div element for the todo item
+      const todoItem = document.createElement('div');
+      todoItem.classList.add('todo-item');
+      todoItem.textContent = todoText;
+
+      // Append the new todo item to the page
+      document.body.appendChild(todoItem);
+
+      // Clear the input field
+      document.querySelector('input[name="todo"]').value = '';
+    }
+
+    // TODO stick todo items in localStorage
+
+    // TODO add columns to the todo item
+    // - priority
+    // - time estimate
+    // - reward
+
+    // TODO add CSS to make it look decent & like a table (use AI for this)
+
+    // TODO add the project to github
+
+    // 
+  </script>
+
+</body>
+
+</html>
