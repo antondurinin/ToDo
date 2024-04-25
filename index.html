@@ -4,46 +4,53 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <h1>TODO App</h1>
+  <div class="header-container">
+    <h1>TODO App</h1>
+    <h2 class="showTime">Timer interval:</h2>
+    <div id="timer">
+      <span id="timerMinutes">25</span>:<span id="timerSeconds">00</span>
+      <input class="button-timer" type="button" value="Start" onclick="startTimer()">
+      <input class="button-timer" type="button" value="Pause" onclick="pauseTimer()">
+      <input class="button-timer" type="button" value="Stop" onclick="stopTimer()">
+    </div>
+  </div>
+  <label for="monthSelector">Select a Month:</label>
+  <select id="monthSelector">
+    <option value="0">January</option>
+    <option value="1">February</option>
+    <option value="2">March</option>
+    <option value="3">April</option>
+    <option value="4">May</option>
+    <option value="5">June</option>
+    <option value="6">July</option>
+    <option value="7">August</option>
+    <option value="8">September</option>
+    <option value="9">October</option>
+    <option value="10">November</option>
+    <option value="11">December</option>
+  </select>
+  <label for="numMonths">Number of Months to Display:</label>
+  <input type="number" id="numMonths" name="numMonths" min="1" max="12" placeholder="Enter number of months">
+
+  <input class="button-add" type="button" value="Update Table" onclick="updateTable()">
+  <label for="priority">Priority:</label>
+  <select id="priority">
+    <option value="High">High</option>
+    <option value="Medium" selected>Medium</option>
+    <option value="Low">Low</option>
+  </select>
   <input type="text" name="todo" placeholder="Enter your todo">
-  <button onclick="addTodo()">Add</button>
+  <input class="button-add" type="button" value="Add" onclick="addTodo()">
 
-  <!-- TODO item -->
-  <div class="todo-item">TODO ITEM 1</div>
-
-  <script>
-    function addTodo() {
-      // Get the value of the input field
-      const todoText = document.querySelector('input[name="todo"]').value;
-
-      // Create a new div element for the todo item
-      const todoItem = document.createElement('div');
-      todoItem.classList.add('todo-item');
-      todoItem.textContent = todoText;
-
-      // Append the new todo item to the page
-      document.body.appendChild(todoItem);
-
-      // Clear the input field
-      document.querySelector('input[name="todo"]').value = '';
-    }
-
-    // TODO stick todo items in localStorage
-
-    // TODO add columns to the todo item
-    // - priority
-    // - time estimate
-    // - reward
-
-    // TODO add CSS to make it look decent & like a table (use AI for this)
-
-    // TODO add the project to github
-
-    // 
-  </script>
-
+  <!-- Container for the table -->
+  <div id="todoTable"></div>
+ 
+ <script src="app.js"></script>
+    
 </body>
 
 </html>
