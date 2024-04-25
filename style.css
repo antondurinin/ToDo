@@ -92,5 +92,8 @@
     cursor: pointer; 
   }
   
-
+  .today {
+    background-color: yellow; /* Example: Highlight with yellow */
+    font-weight: bold;
+}
   

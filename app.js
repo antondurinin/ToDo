@@ -13,8 +13,10 @@
 let isWorkInterval = true;
 let timerInterval;
 let todoList = [];
+let maxId = 0;
 let currentTodo;
 let currentTodoCell;
+const today = new Date();
 
 function startTimer(duration = 1500) {
   clearInterval(timerInterval);
@@ -69,7 +71,8 @@ function updateTomatoCount() {
 }
 
 function createTable(month) {
-    const daysInMonth = new Date(new Date().getFullYear(), month + 1, 0).getDate();
+    
+    const daysInMonth = new Date(today.getFullYear(), month + 1, 0).getDate();
     const tableContainer = document.getElementById('todoTable');
     tableContainer.innerHTML = ''; // Clear existing table
     const table = document.createElement('table');
@@ -78,6 +81,9 @@ function createTable(month) {
     // Create headers for each day of the month
     for (let i = -2; i <= daysInMonth; i++) {
       const headerCell = document.createElement('th');
+      if (i === today.getDate() && month === today.getMonth()) {
+        headerCell.classList.add('today'); // Add a class for today
+      }
       headerCell.textContent = i === -2 ? 'Todo' : (i === -1 ? 'Priority' : (i === 0 ? 'End Day' : `${i}`));
       headerRow.appendChild(headerCell);
     }
@@ -86,6 +92,7 @@ function createTable(month) {
   }
 
 function addTodo() {
+
   const todoText = document.querySelector('input[name="todo"]').value;
   const priority = document.getElementById('priority').value;
   if (todoText === '') return; // Prevent adding empty todos
@@ -94,7 +101,16 @@ function addTodo() {
   const row = table.insertRow(-1); // Insert a new row at the end of the table
   const month = parseInt(document.getElementById('monthSelector').value);
   const daysInMonth = new Date(new Date().getFullYear(), month + 1, 0).getDate();
+  const showTodo = document.getElementById('CurrentTodo');
 
+  currentTodo = todoText;
+  showTodo.textContent = `Current todo: ${todoText}, id: ${maxId}`; 
+  todoList.push({
+    id: maxId,
+    todo: todoText,
+  });
+
+  maxId += 1;
   for (let i = 0; i <= daysInMonth + 2; i++) {
     const cell = row.insertCell(i);
     cell.setAttribute('contenteditable', 'true');
@@ -115,6 +131,8 @@ function addTodo() {
   const startButton = document.createElement('button');
   startButton.innerHTML = '<i class="fas fa-apple-alt"></i>';
   startButton.onclick = function() {
+    currentTodo = todoText;
+    showTodo.textContent = `Current todo: ${todoText}, id: ${maxId}`; 
     startTimer(1500); // Assuming currentDayIndex is the index of the current day column
   };
   row.cells[0].prepend(startButton);
