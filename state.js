@@ -3,7 +3,7 @@ const state = {
 };
 //   TODO organize state into slices
 let isWorkInterval = true;
-let timerInterval;
+let timerIntervalId;
 let todoList = [];
 let maxId = 0;
 let currentTodo;
@@ -16,3 +16,10 @@ let currentTomatoesTime = 0;
 
 const today = new Date();
 const month = today.getMonth();
+
+function updateUIWithNewState() {
+  // always just use the latest state
+  // state
+  // updateTable()
+  // updateSomethingElse()
+}

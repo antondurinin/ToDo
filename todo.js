@@ -1,16 +1,3 @@
-// TODO stick todo items in localStorage
-
-// TODO add columns to the todo item
-// - priority
-// - time estimate
-// - reward
-
-// TODO add CSS to make it look decent & like a table (use AI for this)
-
-// TODO add the project to github
-
-//
-
 function updateTomatoCount() {
   currentTomatoesTime += 1;
   currentTomatoes += currentTomatoes / 1500;

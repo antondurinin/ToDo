@@ -1,27 +1,38 @@
-function startTimer(duration = 1500) {
+function startTimer(durationSeconds = 25 * 60) {
   if (!currentTodo) {
     alert("Chose todo from table");
     return;
   }
-  clearInterval(timerInterval);
-  let timer = duration,
+  clearInterval(timerIntervalId);
+  let timerDurationS = durationSeconds,
     minutes,
     seconds;
+  // let minutes = 0
+  console.log("⭐ ~ startTimer ~ minutes:", minutes);
+  console.log("⭐ ~ startTimer ~ seconds:", seconds);
+
+  // activate the timer CSS
   const timerDisplay = document.getElementById("timer");
   timerDisplay.classList.add("timer-active"); // Add class when timer starts
 
-  timerInterval = setInterval(() => {
-    minutes = parseInt(timer / 60, 10);
-    seconds = parseInt(timer % 60, 10);
+  //   start the timer...
+  timerIntervalId = setInterval(function updateTimerCountdown() {
+    //
+    minutes = parseInt(timerDurationS / 60, 10); // 25
+    seconds = parseInt(timerDurationS % 60, 10); // 0
 
     minutes = minutes < 10 ? "0" + minutes : minutes;
     seconds = seconds < 10 ? "0" + seconds : seconds;
 
+    // TODO store the minutes/seconds in state
+
+    // updating the UI with the state
     document.getElementById("timerMinutes").textContent = minutes;
     document.getElementById("timerSeconds").textContent = seconds;
     document.getElementById("timer").classList.add("timer-active");
-    if (--timer < 0) {
-      clearInterval(timerInterval);
+
+    if (--timerDurationS < 0) {
+      clearInterval(timerIntervalId);
       if (isWorkInterval) {
         startTimer(300); // Start rest interval
         isWorkInterval = false;
@@ -35,13 +46,14 @@ function startTimer(duration = 1500) {
 }
 
 function pauseTimer() {
-  clearInterval(timerInterval);
+  //   TODO store the current timer progress somewhere so we can resume later
+  clearInterval(timerIntervalId);
   document.getElementById("timer").classList.remove("timer-active"); // Remove class when paused
 }
 
 function stopTimer() {
   //updateTomatoCount();
-  clearInterval(timerInterval);
+  clearInterval(timerIntervalId);
   document.getElementById("timer").classList.remove("timer-active"); // Remove class when stopped
   showTodo.textContent = "";
 

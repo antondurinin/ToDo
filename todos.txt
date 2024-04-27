@@ -1,0 +1,20 @@
+// TODO stick todo items in localStorage
+
+// TODO add columns to the todo item
+// - priority
+// - time estimate
+// - reward
+
+// TODO add CSS to make it look decent & like a table (use AI for this)
+
+// TODO add the project to github
+
+//
+
+
+// TODO 1. media query -> mobile, show only today's date box
+// TODO 1. media query -> mobile, move timer down
+// TODO 2. store all data in state
+// TODO 2. store state in localStorage (pretend DB)
+// TODO 2. when page loads, setTimeout before loading from localStorage to simulate internet speed -> show loading state "loading..."
+// TODO 3. comments for everything
