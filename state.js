@@ -8,6 +8,10 @@ const state = {
   currentTodo: 0,
   currentTodoColumn: 0,
   currentTomatoesTime: 0,
+  timer: {
+    /** when we pause the timer, store current time for resuming */
+    remainingTimeOnResume: undefined,
+  }
 };
 
 // Const for today
