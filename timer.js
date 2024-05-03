@@ -4,12 +4,14 @@ function startTimer(durationSeconds = 25 * 60) {
     return;
   }
   clearInterval(state.timerIntervalId);
-  let timerDurationS = durationSeconds,
-    minutes,
-    seconds;
+
+  // try to use the remaining time, else use the default start time
+  let timerDurationS = state.timer.remainingTimeOnResume ?? durationSeconds;
+
+  let minutes = 0;
+  let seconds = 0;
+
   // let minutes = 0
-  // console.log("⭐ ~ startTimer ~ minutes:", minutes);
-  // console.log("⭐ ~ startTimer ~ seconds:", seconds);
 
   // activate the timer CSS
   const timerDisplay = document.getElementById("timer");
@@ -17,7 +19,6 @@ function startTimer(durationSeconds = 25 * 60) {
 
   //   start the timer...
   state.timerIntervalId = setInterval(function updateTimerCountdown() {
-    //
     minutes = parseInt(timerDurationS / 60, 10); // 25
     seconds = parseInt(timerDurationS % 60, 10); // 0
 
@@ -31,7 +32,13 @@ function startTimer(durationSeconds = 25 * 60) {
     document.getElementById("timerSeconds").textContent = seconds;
     document.getElementById("timer").classList.add("timer-active");
 
-    if (--timerDurationS < 0) {
+    // decrement the timer by 1s
+    timerDurationS -= 1;
+    // save the current remaining time to state
+    state.timer.remainingTimeOnResume = timerDurationS;
+
+    // handle when the timer runs out
+    if (timerDurationS < 0) {
       clearInterval(state.timerIntervalId);
       if (state.isWorkInterval) {
         startTimer(300); // Start rest interval
@@ -42,11 +49,10 @@ function startTimer(durationSeconds = 25 * 60) {
         state.isWorkInterval = true;
       }
     }
-  }, 1000);
+  }, 1 * 1000);
 }
 
 function pauseTimer() {
-  //   TODO store the current timer progress somewhere so we can resume later
   clearInterval(state.timerIntervalId);
   document.getElementById("timer").classList.remove("timer-active"); // Remove class when paused
 }
