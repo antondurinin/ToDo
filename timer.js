@@ -1,22 +1,22 @@
 function startTimer(durationSeconds = 25 * 60) {
-  if (!currentTodo) {
+  if (!state.currentTodo) {
     alert("Chose todo from table");
     return;
   }
-  clearInterval(timerIntervalId);
+  clearInterval(state.timerIntervalId);
   let timerDurationS = durationSeconds,
     minutes,
     seconds;
   // let minutes = 0
-  console.log("⭐ ~ startTimer ~ minutes:", minutes);
-  console.log("⭐ ~ startTimer ~ seconds:", seconds);
+  // console.log("⭐ ~ startTimer ~ minutes:", minutes);
+  // console.log("⭐ ~ startTimer ~ seconds:", seconds);
 
   // activate the timer CSS
   const timerDisplay = document.getElementById("timer");
   timerDisplay.classList.add("timer-active"); // Add class when timer starts
 
   //   start the timer...
-  timerIntervalId = setInterval(function updateTimerCountdown() {
+  state.timerIntervalId = setInterval(function updateTimerCountdown() {
     //
     minutes = parseInt(timerDurationS / 60, 10); // 25
     seconds = parseInt(timerDurationS % 60, 10); // 0
@@ -32,14 +32,14 @@ function startTimer(durationSeconds = 25 * 60) {
     document.getElementById("timer").classList.add("timer-active");
 
     if (--timerDurationS < 0) {
-      clearInterval(timerIntervalId);
-      if (isWorkInterval) {
+      clearInterval(state.timerIntervalId);
+      if (state.isWorkInterval) {
         startTimer(300); // Start rest interval
-        isWorkInterval = false;
+        state.isWorkInterval = false;
       } else {
         updateTomatoCount();
         startTimer(1500); // Start work interval
-        isWorkInterval = true;
+        state.isWorkInterval = true;
       }
     }
   }, 1000);
@@ -47,20 +47,20 @@ function startTimer(durationSeconds = 25 * 60) {
 
 function pauseTimer() {
   //   TODO store the current timer progress somewhere so we can resume later
-  clearInterval(timerIntervalId);
+  clearInterval(state.timerIntervalId);
   document.getElementById("timer").classList.remove("timer-active"); // Remove class when paused
 }
 
 function stopTimer() {
   //updateTomatoCount();
-  clearInterval(timerIntervalId);
+  clearInterval(state.timerIntervalId);
   document.getElementById("timer").classList.remove("timer-active"); // Remove class when stopped
   showTodo.textContent = "";
 
   //if (currentTodoCell) {
   //  currentTodoCell.textContent = document.getElementById('timerMinutes').textContent + ":" + document.getElementById('timerSeconds').textContent;
   //}
-  isWorkInterval = !isWorkInterval; // Toggle to next interval
-  console.log("🚀 ~ stopTimer ~ isWorkInterval:", isWorkInterval);
-  startTimer(isWorkInterval ? 1500 : 300);
+  state.isWorkInterval = !state.isWorkInterval; // Toggle to next interval
+
+  startTimer(state.isWorkInterval ? 1500 : 300);
 }

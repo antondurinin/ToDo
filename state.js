@@ -1,19 +1,16 @@
+//    Create state for UI
 const state = {
-  timer: {},
+  isWorkInterval: true,
+  timerIntervalId: 0,
+  todoList: [],
+  maxId: 0,
+  currentId: 0,
+  currentTodo: 0,
+  currentTodoColumn: 0,
+  currentTomatoesTime: 0,
 };
-//   TODO organize state into slices
-let isWorkInterval = true;
-let timerIntervalId;
-let todoList = [];
-let maxId = 0;
-let currentTodo;
-let currentTodoCell;
-let currentTodoColumn;
-let currentTomatoes = 0;
-let currentTomatoesTime = 0;
 
-//  ?
-
+// Const for today
 const today = new Date();
 const month = today.getMonth();
 

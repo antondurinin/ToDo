@@ -1,9 +1,8 @@
+// Change todo time for each second
 function updateTomatoCount() {
-  currentTomatoesTime += 1;
-  currentTomatoes += currentTomatoes / 1500;
+  state.currentTomatoesTime += 1;
+  // currentTomatoes += currentTomatoes / 1500;
   document.getElementById("tomatoes").textContent = currentTomatoes;
-  //let currentCount = parseInt(currentTodoCell.textContent) || 0;
-  //currentTodoCell.textContent = currentCount + 1;
 }
 
 function createTable() {
@@ -54,7 +53,7 @@ function addTodo() {
 
   const showTodo = document.getElementById("CurrentTodo");
   let todoInformation = {
-    id: maxId,
+    id: state.maxId,
     todo: todoText,
   };
 
@@ -68,7 +67,7 @@ function addTodo() {
       cell.textContent = todoText; // Set the first cell text to the todo item
       cell.style.fontWeight = "bold"; // Optional: style the todo text
     } else if (i === 1) {
-      cell.textContent = maxId; // Set the second cell text to the priority
+      cell.textContent = state.maxId; // Set the second cell text to the priority
     } else if (i === 2) {
       cell.textContent = priority; // Set the second cell text to the priority
       cell.style.color =
@@ -82,8 +81,8 @@ function addTodo() {
       todoInformation[`${i}`] = "";
     }
   }
-  todoList.push({
-    id: maxId,
+  state.todoList.push({
+    id: state.maxId,
     todo: todoText,
   });
 
@@ -91,12 +90,12 @@ function addTodo() {
   const startButton = document.createElement("button");
   startButton.innerHTML = '<i class="fas fa-apple-alt"></i>';
   startButton.onclick = function () {
-    currentTodo = todoText;
-    showTodo.textContent = `Current todo: ${todoText}, id: ${row.cells[1].textContent}`;
+    state.currentTodo = todoText;
+    showTodo.textContent = `${todoText}, id: ${row.cells[1].textContent}`;
     startTimer(1500); // Assuming currentDayIndex is the index of the current day column
   };
 
-  maxId += 1;
+  state.maxId += 1;
   row.cells[0].prepend(startButton);
 }
 

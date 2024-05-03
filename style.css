@@ -3,10 +3,19 @@ body {
   margin: 20px;
 }
 
-input[type="text"] {
+h1 input[type="text"] {
   padding: 10px;
   margin-right: 10px;
   width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s ease-in-out;
+  cursor: pointer;
+  text-align: center;
 }
 
 .button-add {
@@ -73,14 +82,6 @@ button {
   text-align: left; /* Default left alignment */
 }
 
-.timer-active {
-  font-size: 48px; /* Larger font size when active */
-  text-align: center; /* Center alignment when active */
-  transform: translateX(-50%); /* Center horizontally */
-  left: 20px; /* Needed with translateX for horizontal centering */
-  position: relative; /* Required for positioning adjustments */
-}
-
 .button-timer {
   margin: 2px 5px 2px 5px;
   font-weight: bold;
@@ -95,3 +96,4 @@ button {
   background-color: yellow; /* Example: Highlight with yellow */
   font-weight: bold;
 }
+
