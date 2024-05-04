@@ -61,7 +61,7 @@ function stopTimer() {
   //updateTomatoCount();
   clearInterval(state.timerIntervalId);
   document.getElementById("timer").classList.remove("timer-active"); // Remove class when stopped
-  showTodo.textContent = "";
+  // showTodo.textContent = "";
 
   //if (currentTodoCell) {
   //  currentTodoCell.textContent = document.getElementById('timerMinutes').textContent + ":" + document.getElementById('timerSeconds').textContent;
