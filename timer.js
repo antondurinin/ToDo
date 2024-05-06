@@ -1,91 +1,64 @@
-function startTimer(durationSeconds = 25 * 60) {
+function durationSecondsForNewInterval(){ 
+  return state.isWorkInterval
+    ? (durationSeconds = 25 * 60)
+    : (durationSeconds = 5 * 60);
+}
 
-  if (state.currentTodo && state.isWorkInterval) {
-    clearInterval(state.timerIntervalId);
+function startTimer(RefreshTimerDuration = false) {
+  const ifShouldAbort = !state.currentTodo && state.isWorkInterval;
 
-  // try to use the remaining time, else use the default start time
-  let timerDurationS = state.timer.remainingTimeOnResume ?? durationSeconds;
-  let minutes = 0;
-  let seconds = 0;
-  
-  // activate the timer CSS
-  const timerDisplay = document.getElementById("timer");
-  timerDisplay.classList.add("timer-active"); // Add class when timer starts
-  
-  //   start the timer...
-  state.timerIntervalId = setInterval(function updateTimerCountdown() {
-    minutes = parseInt(timerDurationS / 60, 10); // 25
-    seconds = parseInt(timerDurationS % 60, 10); // 0
-
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-
-    // updating the UI with the state
-    document.getElementById("timerMinutes").textContent = minutes;
-    document.getElementById("timerSeconds").textContent = seconds;
-    document.getElementById("timer").classList.add("timer-active");
-    // save the current remaining time to state
-    state.timer.remainingTimeOnResume = timerDurationS;
-    console.log(state.timer.remainingTimeOnResume);
-    timerDurationS -= 1;
-    // decrement the timer by 1s
-    currentTomatoStartEnd();
-    // handle when the timer runs out
-    if (timerDurationS < 0) {
-      clearInterval(state.timerIntervalId);
-      if (state.isWorkInterval) {
-        startTimer(300); // Start rest interval
-        state.isWorkInterval = false;
-        updateCurrentTomato();
-      } else {
-        startTimer(1500); // Start work interval
-        state.isWorkInterval = true;
-      }
-    }
-  }, 1 * 1000);
-  } else if (!state.isWorkInterval) {
-
-    let minutes = 0;
-    let seconds = 0;
-    
-    // activate the timer CSS
-    const timerDisplay = document.getElementById("timer");
-    timerDisplay.classList.add("timer-active"); // Add class when timer starts
-    
-    //   start the timer...
-    state.timerIntervalId = setInterval(function updateTimerCountdown() {
-      minutes = parseInt(timerDurationS / 60, 10); // 25
-      seconds = parseInt(timerDurationS % 60, 10); // 0
-  
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
-  
-      // updating the UI with the state
-      document.getElementById("timerMinutes").textContent = minutes;
-      document.getElementById("timerSeconds").textContent = seconds;
-      document.getElementById("timer").classList.add("timer-active");
-      // save the current remaining time to state
-      state.timer.remainingTimeOnResume = timerDurationS;
-    
-      timerDurationS -= 1;
-      // handle when the timer runs out
-      if (timerDurationS < 0) {
-        clearInterval(state.timerIntervalId);
-        if (state.isWorkInterval) {
-          startTimer(300); // Start rest interval
-          state.isWorkInterval = false;       
-        } else {
-          startTimer(1500); // Start work interval
-          state.isWorkInterval = true;
-        }
-      }
-    }, 1 * 1000);
-  } else {
+  if (ifShouldAbort) {
     alert("Chose todo from table");
     return;
   }
+
+  timerDurationS =  durationSecondsForNewInterval();
+  clearInterval(state.timerIntervalId);
+
+  if (!RefreshTimerDuration) {
+    timerDurationS = state.timer.remainingTimeOnResume ?? timerDurationS;
+  }
+
+  // activate the timer CSS
+  const timerDisplay = document.getElementById("timer");
+  timerDisplay.classList.add("timer-active"); // Add class when timer starts
+
+  //   start the timer...
+  // state.timerIntervalId = setInterval(() => updateTimerCountdown(timerDurationS, minutes, seconds), 1*1000);
   
-} 
+  state.timerIntervalId = setInterval(function updateTimerCountdown() {
+    ({ minutes, seconds } = updatiUiTimer(timerDurationS));
+    document.getElementById("timer").classList.add("timer-active");
+    // save the current remaining time to state
+    state.timer.remainingTimeOnResume = timerDurationS;
+    timerDurationS -= 1; // decrement the timer by 1s
+
+    currentTomatoStartEnd();
+
+    // handle when the timer runs out
+    if (timerDurationS < 0) {
+      clearInterval(state.timerIntervalId);
+      state.isWorkInterval = !state.isWorkInterval;
+      updateCurrentTomato();
+      startTimer();
+    }
+  }, 1 * 1000);
+}
+
+function updatiUiTimer(timerDurationS) {
+
+  let minutes = parseInt(timerDurationS / 60, 10); // 25
+  let seconds = parseInt(timerDurationS % 60, 10); // 0
+
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+
+  // updating the UI with the state
+
+  document.getElementById("timerMinutes").textContent = minutes;
+  document.getElementById("timerSeconds").textContent = seconds;
+  return { minutes, seconds };
+}
 
 function pauseTimer() {
   clearInterval(state.timerIntervalId);
@@ -100,21 +73,7 @@ function stopTimer() {
   state.currentId = undefined;
   state.currentTodo = undefined;
 
-  if (state.isWorkInterval) {
-    timerDurationS = 25 * 60;
-  } else {
-    timerDurationS = 5 * 60;
-  }
-
-  minutes = parseInt(timerDurationS / 60, 10); // 25
-  seconds = parseInt(timerDurationS % 60, 10); // 0
-
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  seconds = seconds < 10 ? "0" + seconds : seconds;
-
-  // updating the UI with the state
-  document.getElementById("timerMinutes").textContent = minutes;
-  document.getElementById("timerSeconds").textContent = seconds;
+  ({ minutes, seconds } = updatiUiTimer(durationSecondsForNewInterval()));
   document.getElementById("timer").classList.remove("timer-active"); // Remove class when stopped
 
   updateCurrentTomato();
@@ -125,51 +84,29 @@ function updateCurrentTomato() {
   if (state.currentTomato) {
     state.timer.tomatoes.push(state.currentTomato);
     state.currentTomato = undefined;
-    updateTable(); 
+    updateTable();
   }
 }
 
-function currentTomatoStartEnd() { 
-  now = new Date();
-  currentMonth = now.getMonth();
-  currentDay = now.getDate();
-  currentYear = now.getFullYear();
-  currentHour = now.getHours();
-  currentMinute = now.getMinutes();
-  currentSecond = now.getSeconds();
-
-  if (state.isWorkInterval) {
-    if (!state.currentTomato) {
-      state.currentTomato = {
-        id: state.currentId,
-        start: {
-          month: currentMonth,
-          day: currentDay,
-          year: currentYear,
-          hour: currentHour,
-          minute: currentMinute,
-          second: currentSecond,
-        },
-        end: {
-          month: currentMonth,
-          day: currentDay,
-          year: currentYear,
-          hour: currentHour,
-          minute: currentMinute,
-          second: currentSecond,
-        }
-      };
-    } else {
-      state.currentTomato.end = {
-        month: currentMonth,
-        day: currentDay,
-        year: currentYear,
-        hour: currentHour,
-        minute: currentMinute,
-        second: currentSecond,
-      };
-    }
+function currentTomatoStartEnd() {
+  if (!state.isWorkInterval) {
+    return;
   }
+
+  const now = new Date();
+  const timeObject = {
+    month: now.getMonth(),
+    day: now.getDate(),
+    year: now.getFullYear(),
+    hour: now.getHours(),
+    minute: now.getMinutes(),
+    second: now.getSeconds(),
+  };
+
+  if (!state.currentTomato) {
+    state.currentTomato = { id: state.currentId, start: timeObject };
+  }
+  state.currentTomato.end = timeObject;
 }
 
 function msToHMS(ms) {
