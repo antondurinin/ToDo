@@ -1,7 +1,7 @@
 function createTable(todoList) {
   const daysInMonth = new Date(
-    state.timer.currentYear,
-    state.timer.currentMonth + 1,
+    state.timer.today.getFullYear(),
+    state.timer.today.getMonth() + 1,
     0
   ).getDate();
   const tableContainer = document.getElementById("todoTable");
@@ -12,7 +12,7 @@ function createTable(todoList) {
   // Create headers for each day of the month
   for (let i = -3; i <= daysInMonth; i++) {
     const headerCell = document.createElement("th");
-    if (i === state.timer.currentDay) {
+    if (i === state.timer.today.getDay()) {
       headerCell.classList.add("today"); // Add a class for today
       currentTodoColumn = i;
     }
@@ -57,7 +57,7 @@ function addTodo(todo, update) {
   const row = table.insertRow(-1); // Insert a new row at the end of the table
   const daysInMonth = new Date(
     new Date().getFullYear(),
-    state.timer.currentMonth + 1,
+    state.timer.today.getMonth() + 1,
     0
   ).getDate();
 
@@ -129,8 +129,8 @@ const getCurrentTomatoByDay = (id, day) => {
 function isThisCurrentDay(todo, id, day) {
   return (
     todo.id === id &&
-    todo.start.year === state.timer.currentYear &&
-    todo.start.month === state.timer.currentMonth &&
+    todo.start.year === state.timer.today.getFullYear() &&
+    todo.start.month === state.timer.today.getMonth() &&
     todo.start.day === day
   );
 }

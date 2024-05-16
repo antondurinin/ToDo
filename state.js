@@ -1,4 +1,4 @@
-const INITIAL_TODOS = [
+const INITIAL_TODOS = () => { return [
   {
     todoText: "Test",
     priority: "High",
@@ -11,8 +11,8 @@ const INITIAL_TODOS = [
     id: 2,
     endDay: new Date("2024-05-02").toLocaleDateString(),
   },
-];
-const INITIAL_TOMATOES = [
+]};
+const INITIAL_TOMATOES = () => { return [
   {
     id: 1,
     start: {
@@ -70,13 +70,13 @@ const INITIAL_TOMATOES = [
       second: 2,
     },
   },
-];
+]};
 
 //    Create state for UI
 const state = {
   isWorkInterval: true,
   timerIntervalId: 0,
-  todoList: INITIAL_TODOS,
+  todoList: INITIAL_TODOS(),
   maxId: 3,
   currentId: 0,
   currentTodo: 0,
@@ -86,10 +86,7 @@ const state = {
     remainingTimeOnResume: undefined,
     currentTomato: undefined,
     today: new Date(),
-    currentMonth: new Date().getMonth(),
-    currentYear: new Date().getFullYear(),
-    currentDay: new Date().getDate(),
     // stored tomatoes month - index.
-    tomatoes: INITIAL_TOMATOES,
+    tomatoes: INITIAL_TOMATOES(),
   },
 };
