@@ -70,6 +70,12 @@ button {
   justify-content: space-between; /* Spreads the items across the horizontal space */
 }
 
+.main-container {
+  display: flex;
+  align-items: center; /* Aligns items vertically in the center */
+  justify-content: space-between; /* Spreads the items across the horizontal space */
+}
+
 #timer {
   font-size: 32px;
   font-weight: bold;
@@ -96,4 +102,3 @@ button {
   background-color: yellow; /* Example: Highlight with yellow */
   font-weight: bold;
 }
-

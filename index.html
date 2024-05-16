@@ -11,8 +11,17 @@
     />
   </head>
   <body>
-    <h1>TODO App</h1>
     <div class="header-container">
+      <div class="header-title">
+        <h1>TODO App</h1>
+      </div>
+      <div class="status">
+        <h2 id="CurrentTodo"></h2>
+        <h2 id="tomatoes"></h2>
+      </div>
+    </div>
+    </div>
+    <div class="main-container">
       <div class="updateTable">
         <input
           class="button-add"
@@ -20,10 +29,6 @@
           value="Update Table"
           onclick="updateTable()"
         />
-      </div>
-      <div class="status">
-        <h2 id="CurrentTodo"></h2>
-        <h2 id="tomatoes"></h2>
       </div>
       <div class="addTodo">
         <label for="priority">Priority:</label>

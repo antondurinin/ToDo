@@ -1,12 +1,9 @@
-// Change todo time for each second
-function updateTomatoCount() {
-  state.currentTomatoesTime += 1;
-  // currentTomatoes += currentTomatoes / 1500;
-  document.getElementById("tomatoes").textContent = currentTomatoes;
-}
-
 function createTable(todoList) {
-  const daysInMonth = new Date(today.getFullYear(), month + 1, 0).getDate();
+  const daysInMonth = new Date(
+    state.timer.today.getFullYear(),
+    state.timer.today.getMonth() + 1,
+    0
+  ).getDate();
   const tableContainer = document.getElementById("todoTable");
   tableContainer.innerHTML = ""; // Clear existing table
   const table = document.createElement("table");
@@ -15,7 +12,7 @@ function createTable(todoList) {
   // Create headers for each day of the month
   for (let i = -3; i <= daysInMonth; i++) {
     const headerCell = document.createElement("th");
-    if (i === today.getDate() && month === today.getMonth()) {
+    if (i === state.timer.today.getDay()) {
       headerCell.classList.add("today"); // Add a class for today
       currentTodoColumn = i;
     }
@@ -32,7 +29,6 @@ function createTable(todoList) {
     }
     headerCell.textContent = headerCellContent;
     headerRow.appendChild(headerCell);
-    
   }
   tableContainer.appendChild(table);
   if (todoList) {
@@ -46,28 +42,24 @@ function addTodo(todo, update) {
   let todoText = document.querySelector('input[name="todo"]').value;
   let priority = document.getElementById("priority").value;
   let id = state.maxId;
-  let endDay = undefined
+  let endDay = new Date().toLocaleDateString();
 
   if (todo) {
     todoText = todo.todoText;
     id = todo.id;
     priority = todo.priority;
     endDay = todo.endDay;
-    // todoTimeEachDay = todo.todoTimeEachDay; //TODO choose the right todoTimeEachDay
   }
 
   if (todoText === "") return; // Prevent adding empty todos
 
   const table = document.querySelector("#todoTable table");
-  console.log(table);
   const row = table.insertRow(-1); // Insert a new row at the end of the table
   const daysInMonth = new Date(
     new Date().getFullYear(),
-    month + 1,
+    state.timer.today.getMonth() + 1,
     0
   ).getDate();
-
-  const showTodo = document.getElementById("CurrentTodo");
 
   for (let i = 0; i <= daysInMonth + 3; i++) {
     const cell = row.insertCell(i);
@@ -88,21 +80,18 @@ function addTodo(todo, update) {
     } else if (i === 3) {
       cell.textContent = endDay; // Set the second cell text to the priority
     } else {
-      cell.textContent = ""; // Other cells are empty initially
+      cell.textContent = getUpdatedTomatoTimeByDay(id, i - 3); // Other cells are empty initially
     }
   }
+
   if (!update) {
-  state.todoList.push({
-    todoText: todoText,
-    id: state.maxId,
-    priority: priority,
-    endDay: endDay,
-    // endTime: endTime,
-    // startDay: startDay,
-    // startTime: startTime,
-    // todoTimeEachDay: todoTimeEachDay,
-    })
-  state.maxId += 1;
+    state.todoList.push({
+      todoText: todoText,
+      id: state.maxId,
+      priority: priority,
+      endDay: endDay,
+    });
+    state.maxId += 1;
   }
 
   document.querySelector('input[name="todo"]').value = ""; // Clear the input field
@@ -110,21 +99,61 @@ function addTodo(todo, update) {
   startButton.innerHTML = '<i class="fas fa-apple-alt"></i>';
   startButton.onclick = function () {
     state.currentTodo = todoText;
-    showTodo.textContent = `${todoText}, id: ${row.cells[1].textContent}`;
-    startTimer(1500); // Assuming currentDayIndex is the index of the current day column
+    state.currentId = parseInt(row.cells[1].textContent);
+    RefreshTimerDuration = !state.isWorkInterval;
+    state.isWorkInterval = true;
+
+    updateCurrentTodo();
+    updateCurrentTomato();
+    startTimer(RefreshTimerDuration); // Assuming currentDayIndex is the index of the current day column
   };
 
   row.cells[0].prepend(startButton);
 }
 
 function updateTable() {
-  //const selectedMonth = parseInt(document.getElementById('monthSelector').value);
   createTable(state.todoList);
 }
 
 // Initialize table with current month
 window.onload = function () {
-  //const currentMonth = new Date().getMonth();
-  //document.getElementById('monthSelector').value = currentMonth;
-  createTable();
+  createTable(state.todoList);
 };
+
+//Filter stored tomatoes by day
+const getCurrentTomatoByDay = (id, day) => {
+  return state.timer.tomatoes.filter((todo) => isThisCurrentDay(todo, id, day));
+};
+
+//Check if the current day is the same as the day of the todo
+function isThisCurrentDay(todo, id, day) {
+  return (
+    todo.id === id &&
+    todo.start.year === state.timer.today.getFullYear() &&
+    todo.start.month === state.timer.today.getMonth() &&
+    todo.start.day === day
+  );
+}
+
+//Update the time of the tomato by day in table
+function getUpdatedTomatoTimeByDay(id, day) {
+  const tomatoesThisDay = getCurrentTomatoByDay(id, day);
+  let tomatoTime = 0;
+
+  tomatoesThisDay.forEach(tomato => {
+    const start = new Date(tomato.start.year, tomato.start.month, tomato.start.day, tomato.start.hour, tomato.start.minute, tomato.start.second);
+    const end = new Date(tomato.end.year, tomato.end.month, tomato.end.day, tomato.end.hour, tomato.end.minute, tomato.end.second);
+    tomatoTime += end - start;
+  });
+
+  return tomatoTime > 0 ? msToHMS(tomatoTime) : "";
+}
+
+function updateCurrentTodo(textContent = "") {
+  const showTodo = document.getElementById("CurrentTodo");
+  if (state.currentTodo) {
+    showTodo.textContent = `${state.currentTodo}, id: ${state.currentId}`;
+  } else {
+    showTodo.textContent = textContent;
+  }
+}
